@@ -41,7 +41,26 @@ label{display:block;font-weight:700;font-size:14px;margin:0 0 6px}
 .tx b{direction:ltr}.tx .p{color:var(--ok)}.tx .d{color:var(--danger)}
 .acts{display:flex;gap:8px;margin-top:10px}.acts .in{margin:0;flex:1;min-width:0;direction:ltr;text-align:right}.acts .btn{width:auto;height:46px;padding:0 14px}
 .full{margin-top:8px;height:42px}.empty{text-align:center;color:var(--muted);padding:16px}
+input.in.rt{direction:rtl;text-align:right}
+.acts .btn{flex:1}.ib.sm{height:30px;padding:0 10px;font-size:12px}
+.txe{padding:6px 0;border-bottom:1px dashed var(--line)}
 #toast{position:fixed;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;font-weight:700;color:var(--ok);display:none}
+
+#vList[data-book=debts]{--brand:#c2410c;--brand2:#fb923c;--bt:#fff}
+#vList[data-book=sports]{--brand:#1d4ed8;--brand2:#60a5fa;--bt:#fff}
+#vTeam{--brand:#7e22ce;--brand2:#c084fc;--bt:#fff}
+.tile .ic{width:54px;height:54px;border-radius:16px;display:grid;place-items:center}
+.tile .ic svg{width:30px;height:30px}
+.tile[data-book=debts]{border-color:#fb923c;background:linear-gradient(135deg,rgba(234,88,12,.16),transparent)}
+.tile[data-book=debts] .ic{background:linear-gradient(135deg,#c2410c,#fb923c)}
+.tile[data-book=sports]{border-color:#60a5fa;background:linear-gradient(135deg,rgba(29,78,216,.18),transparent)}
+.tile[data-book=sports] .ic{background:linear-gradient(135deg,#1d4ed8,#60a5fa)}
+.tile[data-book=team]{border-color:#c084fc;background:linear-gradient(135deg,rgba(126,34,206,.18),transparent)}
+.tile[data-book=team] .ic{background:linear-gradient(135deg,#7e22ce,#c084fc)}
+.mini{border:1.5px solid var(--line);background:transparent;color:var(--text);border-radius:8px;width:30px;height:28px;cursor:pointer;flex:none}
+.acts .btn{flex:1}
+.btn.more{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff}
+.tx .t1{flex:1}
 </style>
 </head>
 <body>
@@ -63,8 +82,9 @@ label{display:block;font-weight:700;font-size:14px;margin:0 0 6px}
 <section id="vHome" hidden>
   <div class="dh"><h2>الرئيسية</h2><button class="ib" id="out" type="button">خروج</button></div>
   <p class="sub" id="who"></p>
-  <button class="tile" data-book="debts" type="button"><b>الديون</b><small>تسجيل ومتابعة ديون المحل</small></button>
-  <button class="tile" data-book="sports" type="button"><b>ديون اشتراكات القنوات الرياضية</b><small>ديون مشتركي القنوات الرياضية</small></button>
+  <button class="tile" data-book="debts" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h12v4"/><path d="M3 7v11a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-3"/><path d="M21 9H5"/><path d="M21 9v6h-4a3 3 0 0 1 0-6z"/></svg></span><b>الديون</b><small>تسجيل ومتابعة ديون المحل</small></button>
+  <button class="tile" data-book="sports" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span><b>ديون اشتراكات القنوات الرياضية</b><small>ديون مشتركي القنوات الرياضية</small></button>
+  <button class="tile" data-book="team" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20v-1a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5v1"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14h1a4 4 0 0 1 4 4v2"/></svg></span><b>فريق العمل</b><small>المالك والموظفون</small></button>
   <p class="sub" id="st"></p>
 </section>
 
@@ -85,13 +105,22 @@ label{display:block;font-weight:700;font-size:14px;margin:0 0 6px}
   <div id="list"></div>
 </section>
 
+<section id="vTeam" hidden>
+  <div class="dh"><button class="ib" id="tBack" type="button">رجوع</button><h2>فريق العمل</h2></div>
+  <div class="box"><h3>مالك المشروع</h3><input class="in" id="tOwner" placeholder="اسم المالك" autocomplete="off"></div>
+  <div class="box"><h3>الموظفون</h3>
+    <input class="in" id="tS0" placeholder="الموظف 1" autocomplete="off"><input class="in" id="tS1" placeholder="الموظف 2" autocomplete="off"><input class="in" id="tS2" placeholder="الموظف 3" autocomplete="off"><input class="in" id="tS3" placeholder="الموظف 4" autocomplete="off"><input class="in" id="tS4" placeholder="الموظف 5" autocomplete="off">
+  </div>
+  <button class="btn" id="tSave" type="button">حفظ الأسماء</button>
+</section>
+
 </main>
 <div id="toast"></div>
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut,sendPasswordResetEmail} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {initializeFirestore,persistentLocalCache,collection,onSnapshot,addDoc,updateDoc,deleteDoc,doc,arrayUnion} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {initializeFirestore,persistentLocalCache,collection,onSnapshot,addDoc,updateDoc,deleteDoc,doc,arrayUnion,runTransaction} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /* 1) الصق إعدادات مشروعك هنا (من Firebase Console > Project settings > Your apps) */
 const firebaseConfig={apiKey:"AIzaSyBE0Y10IBFOks36JvCzsuPCXuBmMRjY-Wg",authDomain:"ahmed---shop.firebaseapp.com",projectId:"ahmed---shop",storageBucket:"ahmed---shop.firebasestorage.app",messagingSenderId:"256983045673",appId:"1:256983045673:web:2d057b51b2e6b5d62c6e38"};
@@ -103,7 +132,7 @@ const app=initializeApp(firebaseConfig),auth=getAuth(app);
 const db=initializeFirestore(app,{localCache:persistentLocalCache()});
 const col=collection(db,"shops","main","customers");
 const TITLES={debts:"الديون",sports:"ديون اشتراكات القنوات الرياضية"};
-let book="debts",data=[],openId=null,user=null,isOwner=false,unsub=null;
+let book="debts",data=[],openId=null,user=null,isOwner=false,unsub=null,ed=null,showAll=false;
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const num=s=>{s=String(s).replace(/[٠-٩]/g,c=>c.charCodeAt(0)-1632).replace(/[۰-۹]/g,c=>c.charCodeAt(0)-1776).replace(/٫/g,".").replace(/[,٬\s]/g,"");const n=parseFloat(s);return isFinite(n)?n:NaN};
@@ -111,7 +140,7 @@ const fmt=n=>n.toLocaleString("en-US",{maximumFractionDigits:2});
 const bal=c=>(c.tx||[]).reduce((a,t)=>a+(t.k==="d"?t.a:-t.a),0);
 const nm=s=>String(s).replace(/\s+/g," ").trim().toLowerCase();
 const iso=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-const show=v=>["vLogin","vHome","vList"].forEach(x=>$(x).hidden=x!==v);
+const show=v=>["vLogin","vHome","vList","vTeam"].forEach(x=>$(x).hidden=x!==v);
 let tt;const toast=(m,bad)=>{const t=$("toast");t.textContent=m;t.style.color=bad?"var(--danger)":"var(--ok)";t.style.display="block";clearTimeout(tt);tt=setTimeout(()=>t.style.display="none",3000)};
 const w=p=>p.catch(e=>toast("تعذّر الحفظ: "+(e.code||""),1));
 const disarm=(el,o)=>{delete el.dataset.armed;delete el.dataset.amt;el.textContent=o;el.classList.remove("armed")};
@@ -135,11 +164,15 @@ onAuthStateChanged(auth,u=>{
   isOwner=OWNERS.map(x=>x.toLowerCase()).includes((u.email||"").toLowerCase());
   $("who").textContent=u.email+(isOwner?" (مالك)":"");
   show("vHome");
-  unsub=onSnapshot(col,{includeMetadataChanges:true},s=>{data=s.docs.map(d=>({id:d.id,...d.data()}));$("st").textContent=s.metadata.fromCache?"وضع عدم الاتصال: سيتزامن عند عودة الإنترنت":"متزامن";render()},e=>{$("st").textContent="تعذّر الاتصال: "+e.code});
+  unsub=onSnapshot(col,{includeMetadataChanges:true},s=>{data=s.docs.map(d=>({id:d.id,...d.data()}));$("st").textContent=s.metadata.fromCache?"وضع عدم الاتصال: سيتزامن عند عودة الإنترنت":"متزامن";softRender()},e=>{$("st").textContent="تعذّر الاتصال: "+e.code});
 });
 
 /* ---- التنقل ---- */
-document.querySelectorAll(".tile").forEach(t=>t.onclick=()=>{book=t.dataset.book;openId=null;$("title").textContent=TITLES[book];$("dueW").hidden=book!=="sports";$("q").value="";show("vList");render()});
+document.querySelectorAll(".tile").forEach(t=>t.onclick=()=>{
+  book=t.dataset.book;openId=null;editName=editT=null;
+  if(book==="team"){fillTeam();show("vTeam");return}
+  $("title").textContent=TITLES[book];$("vList").dataset.book=book;$("dueW").hidden=book!=="sports";$("q").value="";show("vList");render(true);
+});
 $("back").onclick=()=>show("vHome");
 
 /* ---- العرض ---- */
@@ -149,8 +182,10 @@ const dueInfo=(c,b)=>{
   const t=d<0?(b>0?"متأخر "+(-d)+" يوم":"انتهى "+c.due):d===0?"يستحق اليوم":d<=3?"يستحق بعد "+d+" أيام":"يستحق: "+c.due;
   return `<small class="due${late?" late":""}">${t}</small>`;
 };
-function render(){
+let editName=null,editT=null,pending=false;
+function render(skip){
   if($("vList").hidden)return;
+  const keep={};["pa","pi","ea","ei","en"].forEach(i=>{const e=$(i);if(e)keep[i]=e.value});
   const all=data.filter(c=>c.book===book).sort((a,b)=>(a.created||0)-(b.created||0));
   const today=iso(new Date());let total=0,late=0;
   all.forEach(c=>{const b=bal(c);total+=b;if(book==="sports"&&c.due&&b>0&&c.due<today)late++});
@@ -159,59 +194,116 @@ function render(){
   $("names").innerHTML=all.map(c=>`<option value="${esc(c.name)}">`).join("");
   const q=nm($("q").value),rows=all.map((c,i)=>({c,i})).filter(r=>!q||nm(r.c.name).includes(q));
   if(!rows.length){$("list").innerHTML=`<div class="empty">${all.length?"لا توجد نتائج":"لم تُسجَّل أي ديون بعد."}</div>`;return}
+  const LTR='style="direction:ltr;text-align:right"';
   $("list").innerHTML=`<div style="overflow-x:auto"><table class="tb"><thead><tr><th>#</th><th>الزبون</th><th>الحاجات المباعة</th><th>المبلغ الكلي</th></tr></thead><tbody>`+rows.map(({c,i})=>{
     const b=bal(c),items=esc((c.tx||[]).filter(t=>t.k==="d"&&t.n).map(t=>t.n).join("، "));
     let h=`<tr class="trow" data-id="${c.id}"><td class="c1">${i+1}</td><td>${esc(c.name)}${dueInfo(c,b)}</td><td class="c3">${items}</td><td class="c4 ${b>0?"neg":"z"}">${fmt(b)}</td></tr>`;
     if(c.id===openId){
-      h+=`<tr><td colspan="4">`+(c.tx||[]).slice(-8).reverse().map(t=>`<div class="tx"><span>${new Date(t.t).toLocaleDateString("en-GB")}${t.n?" - "+esc(t.n):""}${t.by?" · "+esc(t.by):""}</span><b class="${t.k}">${t.k==="d"?"+":"-"}${fmt(t.a)}</b></div>`).join("")
-        +(book==="sports"?`<button class="btn g full" data-ren="${c.id}" type="button">تجديد الاشتراك شهراً</button>`:"")
-        +`<div class="acts"><input class="in" id="pa" inputmode="decimal" placeholder="المبلغ" autocomplete="off"><button class="btn pay" data-pay="${c.id}" type="button">تسديد</button><button class="btn g" data-more="${c.id}" type="button">دين</button></div>`
-        +(isOwner?`<button class="btn g full" style="color:var(--danger)" data-del="${c.id}" type="button">حذف الزبون</button>`:"")
-        +`</td></tr>`;
+      const tx=(c.tx||[]).slice().sort((x,y)=>x.t-y.t).slice(-10).reverse();
+      h+=`<tr><td colspan="4">`
+      +(editName===c.id?`<div class="box"><h3>تعديل اسم الزبون</h3><input class="in" id="en" value="${esc(c.name)}" autocomplete="off"><div class="acts"><button class="btn" data-svname="${c.id}" type="button">حفظ</button><button class="btn g" data-cancel="1" type="button">إلغاء</button></div></div>`:`<button class="btn g full" data-edname="${c.id}" type="button">تعديل اسم الزبون</button>`)
+      +tx.map(t=>{
+        const key=c.id+"|"+t.t;
+        return `<div class="tx"><span class="t1">${new Date(t.t).toLocaleDateString("en-GB")}${t.n?" - "+esc(t.n):""}${t.by?" · "+esc(t.by):""}${t.ed?" (معدّل)":""}</span><b class="${t.k}">${t.k==="d"?"+":"-"}${fmt(t.a)}</b><button class="mini" data-edtx="${key}" type="button">✎</button></div>`
+        +(editT===key?`<div class="box"><h3>تعديل العملية</h3><input class="in" id="ea" inputmode="decimal" value="${t.a}" ${LTR}>${t.k==="d"?`<input class="in" id="ei" value="${esc(t.n||"")}" placeholder="الحاجة" autocomplete="off">`:""}<div class="acts"><button class="btn" data-svtx="${key}" type="button">حفظ التعديل</button><button class="btn g" data-cancel="1" type="button">إلغاء</button></div></div>`:"");
+      }).join("")
+      +(book==="sports"?`<button class="btn g full" data-ren="${c.id}" type="button">تجديد الاشتراك شهراً</button>`:"")
+      +`<input class="in" id="pa" inputmode="decimal" placeholder="المبلغ" autocomplete="off" ${LTR} style="margin-top:10px"><input class="in" id="pi" placeholder="الحاجة (عند إضافة دين جديد)" autocomplete="off"><div class="acts"><button class="btn pay" data-pay="${c.id}" type="button">تسديد</button><button class="btn more" data-more="${c.id}" type="button">دين جديد</button></div>`
+      +(isOwner?`<button class="btn g full" style="color:var(--danger)" data-del="${c.id}" type="button">حذف الزبون</button>`:"")
+      +`</td></tr>`;
     }
     return h;
   }).join("")+`</tbody></table></div>`;
+  if(!skip)Object.keys(keep).forEach(k=>{const e=$(k);if(e&&keep[k])e.value=keep[k]});
 }
-$("q").oninput=render;
+const typing=()=>{const a=document.activeElement;return !!(a&&a.tagName==="INPUT"&&a.closest&&a.closest("#list"))};
+const softRender=()=>{if(typing())pending=true;else render()};
+$("q").oninput=()=>render();
 $("n").oninput=()=>{
   const n=nm($("n").value),f=n&&data.find(c=>c.book===book&&nm(c.name)===n);
   $("hint").textContent=f?`زبون موجود - رصيده الحالي: ${fmt(bal(f))}. اكتب المبلغ المضاف فقط وسيُجمع عليه.`:(n?"زبون جديد":"");
 };
 
-/* ---- إضافة دين ---- */
-$("add").onclick=()=>{
-  const name=$("n").value.replace(/\s+/g," ").trim(),a=num($("a").value),item=$("it").value.trim(),due=$("due").value;
+/* ---- إضافة دين (بخطوتين) ---- */
+$("add").onclick=e=>{
+  const b=e.currentTarget,name=$("n").value.replace(/\s+/g," ").trim(),a=num($("a").value),item=$("it").value.trim(),due=$("due").value;
   if(!name)return toast("أدخل اسم الزبون",1);
   if(!(a>0))return toast("أدخل مبلغاً صحيحاً",1);
-  const e={k:"d",a,n:item,t:Date.now(),by:user.email},ex=data.find(c=>c.book===book&&nm(c.name)===nm(name));
-  const p=ex?updateDoc(doc(col,ex.id),{tx:arrayUnion(e),...(due?{due}:{})}):addDoc(col,{book,name,tx:[e],due:due||"",created:Date.now()});
-  w(p);
+  const ex=data.find(c=>c.book===book&&nm(c.name)===nm(name)),key=[name,a,item,due].join("|");
+  if(!(b.dataset.armed&&b.dataset.amt===key)){
+    arm(b,`تأكيد إضافة ${fmt(a)}${item?" ("+item+")":""} ${ex?"إلى "+ex.name+" (رصيده "+fmt(bal(ex))+")":"لزبون جديد: "+name}؟`,"إضافة الدين");b.dataset.amt=key;return;
+  }
+  disarm(b,"إضافة الدين");
+  const en={k:"d",a,n:item,t:Date.now(),by:user.email};
+  w(ex?updateDoc(doc(col,ex.id),{tx:arrayUnion(en),...(due?{due}:{})}):addDoc(col,{book,name,tx:[en],due:due||"",created:Date.now()}));
   toast("تمت الإضافة. الرصيد الآن: "+fmt((ex?bal(ex):0)+a));
   $("n").value=$("a").value=$("it").value=$("due").value="";$("hint").textContent="";
 };
+["n","a","it","due"].forEach(i=>$(i).addEventListener("input",()=>{const b=$("add");if(b.dataset.armed)disarm(b,"إضافة الدين")}));
+
+/* ---- فريق العمل ---- */
+const TS=["tOwner","tS0","tS1","tS2","tS3","tS4"];
+function fillTeam(){
+  const t=data.find(c=>c.book==="team")||{},st=t.staff||[];
+  $("tOwner").value=t.owner||"";for(let i=0;i<5;i++)$("tS"+i).value=st[i]||"";
+  TS.forEach(id=>$(id).disabled=!isOwner);$("tSave").hidden=!isOwner;
+}
+$("tBack").onclick=()=>show("vHome");
+$("tSave").onclick=()=>{
+  const owner=$("tOwner").value.trim(),staff=[0,1,2,3,4].map(i=>$("tS"+i).value.trim()),ex=data.find(c=>c.book==="team");
+  w(ex?updateDoc(doc(col,ex.id),{owner,staff}):addDoc(col,{book:"team",name:"team",tx:[],owner,staff,created:0}));
+  toast("تم حفظ الأسماء");
+};
 
 /* ---- إجراءات الزبون ---- */
-$("list").oninput=e=>{if(e.target.id==="pa"){const b=$("list").querySelector("[data-pay]");if(b&&b.dataset.armed)disarm(b,"تسديد")}};
+$("list").addEventListener("focusout",()=>setTimeout(()=>{if(pending&&!typing()){pending=false;render()}},80));
+$("list").oninput=e=>{
+  const id=e.target.id;
+  if(id==="pa"||id==="pi")$("list").querySelectorAll("[data-pay],[data-more]").forEach(b=>{if(b.dataset.armed)disarm(b,b.dataset.pay?"تسديد":"دين جديد")});
+  if(id==="ea"||id==="ei"||id==="en")$("list").querySelectorAll("[data-svtx],[data-svname]").forEach(b=>{if(b.dataset.armed)disarm(b,b.dataset.svtx?"حفظ التعديل":"حفظ")});
+};
 $("list").onclick=e=>{
-  const el=e.target.closest("[data-id],[data-pay],[data-more],[data-ren],[data-del]");if(!el)return;
-  if(el.dataset.id){openId=openId===el.dataset.id?null:el.dataset.id;render();return}
-  const id=el.dataset.pay||el.dataset.more||el.dataset.ren||el.dataset.del,c=data.find(x=>x.id===id);if(!c)return;
+  const el=e.target.closest("[data-id],[data-pay],[data-more],[data-ren],[data-del],[data-edname],[data-svname],[data-edtx],[data-svtx],[data-cancel]");if(!el)return;
+  const d=el.dataset;
+  if(d.id){openId=openId===d.id?null:d.id;editName=editT=null;render(true);return}
+  if(d.cancel){editName=editT=null;render(true);return}
+  if(d.edname){editName=d.edname;editT=null;render(true);return}
+  if(d.edtx){editT=d.edtx;editName=null;render(true);return}
+  const id=d.pay||d.more||d.ren||d.del||d.svname||(d.svtx||"").split("|")[0],c=data.find(x=>x.id===id);if(!c)return;
   const ref=doc(col,id);
-  if(el.dataset.del){
+  if(d.svname){
+    const n=$("en").value.replace(/\s+/g," ").trim();
+    if(!n)return toast("اكتب الاسم",1);
+    if(data.some(x=>x.id!==c.id&&x.book===book&&nm(x.name)===nm(n)))return toast("هذا الاسم مسجل لزبون آخر",1);
+    if(n===c.name){editName=null;render(true);return}
+    if(!(el.dataset.armed&&d.amt===n)){arm(el,`تأكيد تغيير الاسم إلى «${n}»؟`,"حفظ");el.dataset.amt=n;return}
+    w(updateDoc(ref,{name:n}));editName=null;render(true);toast("تم تعديل الاسم");return;
+  }
+  if(d.svtx){
+    const t=(c.tx||[]).find(x=>String(x.t)===d.svtx.split("|")[1]);if(!t)return;
+    const a=num($("ea").value),n=t.k==="d"?$("ei").value.trim():(t.n||"");
+    if(!(a>0))return toast("أدخل مبلغاً صحيحاً",1);
+    const key=a+"|"+n;
+    if(!(el.dataset.armed&&d.amt===key)){arm(el,`تأكيد التعديل: ${fmt(t.a)} ← ${fmt(a)}؟`,"حفظ التعديل");el.dataset.amt=key;return}
+    w(updateDoc(ref,{tx:c.tx.map(x=>x===t?{...x,a,n,ed:user.email}:x)}));editT=null;render(true);toast("تم التعديل");return;
+  }
+  if(d.del){
     if(!el.dataset.armed){const b=bal(c);arm(el,`تأكيد حذف «${c.name}» وكل سجله${b>0?" (عليه "+fmt(b)+")":""}؟`,"حذف الزبون");return}
     openId=null;w(deleteDoc(ref));toast("تم حذف الزبون");return;
   }
-  if(el.dataset.ren){
+  if(d.ren){
     const cur=c.due&&c.due>iso(new Date())?new Date(c.due+"T00:00:00"):new Date();cur.setMonth(cur.getMonth()+1);
     w(updateDoc(ref,{due:iso(cur)}));return;
   }
   const a=num($("pa").value);
   if(!(a>0)){$("pa").style.borderColor="var(--danger)";return}
-  const isPay=!!el.dataset.pay;
-  if(isPay&&!(el.dataset.armed&&el.dataset.amt===String(a))){
-    arm(el,(a>bal(c)?"المبلغ أكبر من الدين! ":"")+"تأكيد تسديد "+fmt(a)+"؟","تسديد");el.dataset.amt=String(a);return;
+  const isPay=!!d.pay,item=isPay?"":$("pi").value.trim(),key=a+"|"+item;
+  if(!(el.dataset.armed&&d.amt===key)){
+    arm(el,isPay?(a>bal(c)?"المبلغ أكبر من الدين! ":"")+`تأكيد تسديد ${fmt(a)}؟`:`تأكيد دين ${fmt(a)}${item?" ("+item+")":""}؟`,isPay?"تسديد":"دين جديد");el.dataset.amt=key;return;
   }
-  w(updateDoc(ref,{tx:arrayUnion({k:isPay?"p":"d",a,n:"",t:Date.now(),by:user.email})}));
+  $("pa").value="";$("pi").value="";
+  w(updateDoc(ref,{tx:arrayUnion({k:isPay?"p":"d",a,n:item,t:Date.now(),by:user.email})}));
+  toast(isPay?"تم التسديد":"تمت إضافة الدين");
 };
 </script>
 </body>
