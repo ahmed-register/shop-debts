@@ -64,6 +64,10 @@ input.in.rt{direction:rtl;text-align:right}
 #vBoth{--brand:#be123c;--brand2:#fb7185;--bt:#fff}
 .tile[data-book=both]{border-color:#fb7185;background:linear-gradient(135deg,rgba(190,18,60,.18),transparent)}
 .tile[data-book=both] .ic{background:linear-gradient(135deg,#be123c,#fb7185)}
+#vBackup{--brand:#15803d;--brand2:#4ade80;--bt:#fff}
+.tile[data-book=backup]{border-color:#4ade80;background:linear-gradient(135deg,rgba(21,128,61,.2),transparent)}
+.tile[data-book=backup] .ic{background:linear-gradient(135deg,#15803d,#4ade80)}
+.bkb{width:100%;padding:12px;margin-bottom:12px;border-radius:14px;border:1.5px solid var(--danger);background:transparent;color:var(--danger);font:inherit;font-weight:800;cursor:pointer}
 </style>
 </head>
 <body>
@@ -85,10 +89,12 @@ input.in.rt{direction:rtl;text-align:right}
 <section id="vHome" hidden>
   <div class="dh"><h2>الرئيسية</h2><button class="ib" id="out" type="button">خروج</button></div>
   <p class="sub" id="who"></p>
+  <button class="bkb" id="bkBanner" type="button" hidden>مرّ أكثر من 24 ساعة على آخر نسخة احتياطية. اضغط لإرسالها الآن إلى واتساب</button>
   <button class="tile" data-book="debts" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h12v4"/><path d="M3 7v11a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-3"/><path d="M21 9H5"/><path d="M21 9v6h-4a3 3 0 0 1 0-6z"/></svg></span><b>الديون</b><small>تسجيل ومتابعة ديون المحل</small></button>
   <button class="tile" data-book="sports" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span><b>ديون اشتراكات القنوات الرياضية</b><small>ديون مشتركي القنوات الرياضية</small></button>
   <button class="tile" data-book="team" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20v-1a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5v1"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14h1a4 4 0 0 1 4 4v2"/></svg></span><b>فريق العمل</b><small>المالك والموظفون</small></button>
   <button class="tile" data-book="both" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/></svg></span><b>زبائن في القسمين</b><small>مطلوبون في دين المحل والاشتراكات</small></button>
+  <button class="tile" data-book="backup" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg></span><b>النسخة الاحتياطية</b><small>حفظ البيانات وإرسالها إلى واتساب</small></button>
   <p class="sub" id="st"></p>
 </section>
 
@@ -124,13 +130,29 @@ input.in.rt{direction:rtl;text-align:right}
   <div id="bList"></div>
 </section>
 
+<section id="vBackup" hidden>
+  <div class="dh"><button class="ib" id="bkBack" type="button">رجوع</button><h2>النسخة الاحتياطية</h2></div>
+  <div class="box">
+    <h3>حفظ نسخة كاملة</h3>
+    <p class="sub" id="bkLast" style="text-align:right;margin:0 0 10px"></p>
+    <button class="btn" id="bkWa" type="button">إرسال النسخة إلى واتساب</button>
+    <button class="btn g full" id="bkSave" type="button">حفظ النسخة في الجوال</button>
+    <button class="btn g full" id="bkCsv" type="button">تصدير جدول الزبائن (CSV)</button>
+  </div>
+  <div class="box" id="bkRestore" hidden>
+    <h3>استعادة نسخة (للمالك فقط)</h3>
+    <input class="in" id="rFile" type="file" accept=".json,.txt,application/json,text/plain" style="height:auto;padding:10px">
+    <button class="btn g" id="bkRestoreBtn" type="button">استعادة النسخة</button>
+  </div>
+</section>
+
 </main>
 <div id="toast"></div>
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut,sendPasswordResetEmail} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {initializeFirestore,persistentLocalCache,collection,onSnapshot,addDoc,updateDoc,deleteDoc,doc,arrayUnion,runTransaction} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {initializeFirestore,persistentLocalCache,collection,onSnapshot,addDoc,updateDoc,deleteDoc,setDoc,doc,arrayUnion,runTransaction} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /* 1) الصق إعدادات مشروعك هنا (من Firebase Console > Project settings > Your apps) */
 const firebaseConfig={apiKey:"AIzaSyBE0Y10IBFOks36JvCzsuPCXuBmMRjY-Wg",authDomain:"ahmed---shop.firebaseapp.com",projectId:"ahmed---shop",storageBucket:"ahmed---shop.firebasestorage.app",messagingSenderId:"256983045673",appId:"1:256983045673:web:2d057b51b2e6b5d62c6e38"};
@@ -150,7 +172,7 @@ const fmt=n=>n.toLocaleString("en-US",{maximumFractionDigits:2});
 const bal=c=>(c.tx||[]).reduce((a,t)=>a+(t.k==="d"?t.a:-t.a),0);
 const nm=s=>String(s).replace(/\s+/g," ").trim().toLowerCase();
 const iso=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-const show=v=>["vLogin","vHome","vList","vTeam","vBoth"].forEach(x=>$(x).hidden=x!==v);
+const show=v=>["vLogin","vHome","vList","vTeam","vBoth","vBackup"].forEach(x=>$(x).hidden=x!==v);
 let tt;const toast=(m,bad)=>{const t=$("toast");t.textContent=m;t.style.color=bad?"var(--danger)":"var(--ok)";t.style.display="block";clearTimeout(tt);tt=setTimeout(()=>t.style.display="none",3000)};
 const w=p=>p.catch(e=>toast("تعذّر الحفظ: "+(e.code||""),1));
 const disarm=(el,o)=>{delete el.dataset.armed;delete el.dataset.amt;el.textContent=o;el.classList.remove("armed")};
@@ -182,6 +204,7 @@ document.querySelectorAll(".tile").forEach(t=>t.onclick=()=>{
   book=t.dataset.book;openId=null;editName=editT=null;
   if(book==="team"){fillTeam();show("vTeam");return}
   if(book==="both"){renderBoth();show("vBoth");return}
+  if(book==="backup"){fillBackup();show("vBackup");return}
   $("title").textContent=TITLES[book];$("vList").dataset.book=book;$("dueW").hidden=book!=="sports";$("q").value="";show("vList");render(true);
 });
 $("back").onclick=()=>show("vHome");
@@ -228,7 +251,7 @@ function render(skip){
   if(!skip)Object.keys(keep).forEach(k=>{const e=$(k);if(e&&keep[k])e.value=keep[k]});
 }
 const typing=()=>{const a=document.activeElement;return !!(a&&a.tagName==="INPUT"&&a.closest&&a.closest("#list"))};
-const softRender=()=>{if(!$("vBoth").hidden)renderBoth();if(typing())pending=true;else render()};
+const softRender=()=>{updBanner();if(!$("vBoth").hidden)renderBoth();if(typing())pending=true;else render()};
 function renderBoth(){
   const m=Object.create(null);
   data.forEach(c=>{
@@ -242,6 +265,69 @@ function renderBoth(){
   $("bCnt").textContent=rows.length?`عدد الزبائن: ${rows.length}`:"لا يوجد زبون مطلوب في القسمين";
   $("bList").innerHTML=rows.length?`<div style="overflow-x:auto"><table class="tb"><thead><tr><th>#</th><th>الزبون</th><th>دين المحل</th><th>الاشتراكات</th><th>المجموع</th></tr></thead><tbody>`+rows.map((o,i)=>`<tr><td class="c1">${i+1}</td><td>${esc(o.name)}</td><td class="c4 neg">${fmt(o.debts)}</td><td class="c4 neg">${fmt(o.sports)}</td><td class="c4 neg">${fmt(o.debts+o.sports)}</td></tr>`).join("")+`</tbody></table></div>`:`<div class="empty">لا يوجد زبون عليه دين في القسمين معاً.</div>`;
 }
+/* ---- النسخة الاحتياطية ---- */
+const LB="lastBackup";
+const lastB=()=>{try{return +localStorage.getItem(LB)||0}catch(e){return 0}};
+const stampB=()=>{try{localStorage.setItem(LB,String(Date.now()))}catch(e){}updBanner();fillBackup()};
+function updBanner(){
+  const has=data.some(c=>c.book==="debts"||c.book==="sports");
+  $("bkBanner").hidden=!(isOwner&&has&&Date.now()-lastB()>864e5);
+}
+setInterval(updBanner,60000);
+function fillBackup(){
+  const t=lastB();
+  $("bkLast").textContent=t?"آخر نسخة على هذا الجهاز: "+new Date(t).toLocaleString("ar-EG"):"لم تُحفظ أي نسخة على هذا الجهاز بعد";
+  $("bkRestore").hidden=!isOwner;
+}
+const dstamp=()=>new Date().toISOString().slice(0,10);
+function backupFile(type,ext){
+  return new File([JSON.stringify({app:"shop-debts",v:1,t:Date.now(),by:user.email,docs:data})],`debts-backup-${dstamp()}.${ext}`,{type});
+}
+function download(f){const u=URL.createObjectURL(f),a=document.createElement("a");a.href=u;a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}
+async function shareFile(f,title){
+  if(navigator.canShare&&navigator.canShare({files:[f]})){
+    try{await navigator.share({files:[f],title});return true}catch(e){if(e.name==="AbortError")return null}
+  }
+  return false;
+}
+$("bkBack").onclick=()=>show("vHome");
+$("bkBanner").onclick=()=>$("bkWa").click();
+$("bkWa").onclick=async()=>{
+  if(!data.length)return toast("لا توجد بيانات",1);
+  let f=backupFile("application/json","json"),r=await shareFile(f,"نسخة دفتر الديون");
+  if(r===false){f=backupFile("text/plain","txt");r=await shareFile(f,"نسخة دفتر الديون")}
+  if(r===null)return;
+  if(r===false){download(f);toast("حُفظ الملف في جوالك، أرسله يدوياً إلى واتساب")}
+  stampB();
+};
+$("bkSave").onclick=()=>{if(!data.length)return toast("لا توجد بيانات",1);download(backupFile("application/json","json"));stampB();toast("تم حفظ النسخة في جوالك")};
+$("bkCsv").onclick=async()=>{
+  const q=v=>'"'+String(v).replace(/"/g,'""')+'"',rows=[["القسم","#","الزبون","الحاجات","المبلغ الكلي"].map(q).join(",")];
+  [["debts","الديون"],["sports","اشتراكات القنوات"]].forEach(([b,n])=>{
+    data.filter(c=>c.book===b).sort((x,y)=>(x.created||0)-(y.created||0)).forEach((c,i)=>rows.push([n,i+1,c.name,(c.tx||[]).filter(t=>t.k==="d"&&t.n).map(t=>t.n).join("، "),bal(c)].map(q).join(",")));
+  });
+  const f=new File(["\ufeff"+rows.join("\r\n")],`debts-table-${dstamp()}.csv`,{type:"text/csv"});
+  const r=await shareFile(f,"جدول الديون");if(r===null)return;
+  if(r===false){download(f);toast("تم حفظ الجدول في جوالك")}
+};
+$("bkRestoreBtn").onclick=async e=>{
+  const b=e.currentTarget,file=$("rFile").files[0];
+  if(!isOwner)return;
+  if(!file)return toast("اختر ملف النسخة أولاً",1);
+  let o;try{o=JSON.parse(await file.text())}catch(_){return toast("الملف غير صالح",1)}
+  const ok=d=>d&&typeof d.id==="string"&&/^[A-Za-z0-9_-]{1,40}$/.test(d.id)&&["debts","sports","team"].includes(d.book)&&typeof d.name==="string"&&Array.isArray(d.tx)&&d.tx.every(t=>t&&typeof t.a==="number"&&(t.k==="d"||t.k==="p")&&typeof t.t==="number");
+  if(!(o&&o.app==="shop-debts"&&Array.isArray(o.docs)&&o.docs.length&&o.docs.every(ok)))return toast("هذه ليست نسخة صالحة من دفتر الديون",1);
+  const key=file.name+"|"+o.docs.length;
+  if(!(b.dataset.armed&&b.dataset.amt===key)){arm(b,`تأكيد استعادة ${o.docs.length} سجلاً؟ سيحل محل السجلات الموجودة بالأرقام نفسها`,"استعادة النسخة");b.dataset.amt=key;return}
+  disarm(b,"استعادة النسخة");
+  w(Promise.all(o.docs.map(d=>{
+    const body={book:d.book,name:d.name,tx:d.tx,due:/^\d{4}-\d\d-\d\d$/.test(d.due||"")?d.due:"",created:+d.created||0};
+    if(d.book==="team"){body.owner=String(d.owner||"");body.staff=Array.isArray(d.staff)?d.staff.map(String).slice(0,5):[]}
+    return setDoc(doc(col,d.id),body);
+  })));
+  $("rFile").value="";toast("تمت الاستعادة");
+};
+
 $("bBack").onclick=()=>show("vHome");
 $("q").oninput=()=>render();
 $("n").oninput=()=>{
