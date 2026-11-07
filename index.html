@@ -73,7 +73,9 @@ input.in.rt{direction:rtl;text-align:right}
 <body>
 <main class="wrap">
 
-<section id="vLogin">
+<section id="vLoad"><h1>دفتر الديون</h1><p class="sub">جارٍ التحميل...</p></section>
+
+<section id="vLogin" hidden>
   <h1>دفتر الديون</h1><p class="sub">تسجيل الدخول</p>
   <div class="card">
     <label for="em">البريد الإلكتروني</label>
@@ -172,7 +174,7 @@ const fmt=n=>n.toLocaleString("en-US",{maximumFractionDigits:2});
 const bal=c=>(c.tx||[]).reduce((a,t)=>a+(t.k==="d"?t.a:-t.a),0);
 const nm=s=>String(s).replace(/\s+/g," ").trim().toLowerCase();
 const iso=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-const show=v=>["vLogin","vHome","vList","vTeam","vBoth","vBackup"].forEach(x=>$(x).hidden=x!==v);
+const show=v=>["vLoad","vLogin","vHome","vList","vTeam","vBoth","vBackup"].forEach(x=>$(x).hidden=x!==v);
 let tt;const toast=(m,bad)=>{const t=$("toast");t.textContent=m;t.style.color=bad?"var(--danger)":"var(--ok)";t.style.display="block";clearTimeout(tt);tt=setTimeout(()=>t.style.display="none",3000)};
 const w=p=>p.catch(e=>toast("تعذّر الحفظ: "+(e.code||""),1));
 const disarm=(el,o)=>{delete el.dataset.armed;delete el.dataset.amt;el.textContent=o;el.classList.remove("armed")};
