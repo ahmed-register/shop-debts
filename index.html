@@ -135,7 +135,7 @@ onAuthStateChanged(auth,u=>{
   isOwner=OWNERS.map(x=>x.toLowerCase()).includes((u.email||"").toLowerCase());
   $("who").textContent=u.email+(isOwner?" (مالك)":"");
   show("vHome");
-  unsub=onSnapshot(col,s=>{data=s.docs.map(d=>({id:d.id,...d.data()}));$("st").textContent=s.metadata.fromCache?"وضع عدم الاتصال: سيتزامن عند عودة الإنترنت":"متزامن";render()},e=>{$("st").textContent="تعذّر الاتصال: "+e.code});
+  unsub=onSnapshot(col,{includeMetadataChanges:true},s=>{data=s.docs.map(d=>({id:d.id,...d.data()}));$("st").textContent=s.metadata.fromCache?"وضع عدم الاتصال: سيتزامن عند عودة الإنترنت":"متزامن";render()},e=>{$("st").textContent="تعذّر الاتصال: "+e.code});
 });
 
 /* ---- التنقل ---- */
