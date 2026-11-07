@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>دفتر الديون</title>
+<style>
+:root{--bg:#f3f6f4;--card:#fff;--text:#14201b;--muted:#5d6d66;--line:#d9e2dd;--brand:#0f766e;--brand2:#14b8a6;--bt:#fff;--danger:#c0392b;--ok:#15803d;--glow:rgba(20,184,166,.25);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root{--bg:#0c1512;--card:#14201c;--text:#e8f1ed;--muted:#93a69d;--line:#26362f;--brand:#14b8a6;--brand2:#2dd4bf;--bt:#06201c;--danger:#ff7b6b;--ok:#4ade80;--glow:rgba(45,212,191,.2)}}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;padding:20px 14px}
+.wrap{max-width:440px;margin:0 auto}
+h1{text-align:center;margin:8px 0 4px;font-size:26px}.sub{text-align:center;color:var(--muted);margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px}
+label{display:block;font-weight:700;font-size:14px;margin:0 0 6px}
+.in{width:100%;height:46px;border-radius:12px;border:1.5px solid var(--line);background:transparent;color:var(--text);font:inherit;font-size:16px;padding:0 12px;margin-bottom:10px;outline:none}
+.in:focus{border-color:var(--brand);box-shadow:0 0 0 4px var(--glow)}
+.ltr{direction:ltr;text-align:left}
+.btn{width:100%;height:48px;border-radius:12px;border:0;font:inherit;font-weight:800;font-size:16px;cursor:pointer;background:linear-gradient(135deg,var(--brand),var(--brand2));color:var(--bt)}
+.btn.g{background:transparent;color:var(--text);border:1.5px solid var(--line);font-weight:700}
+.btn.pay{background:var(--ok);color:#fff}.armed{background:var(--danger)!important;color:#fff!important}
+.msg{min-height:18px;font-size:13px;color:var(--danger);margin:4px 0 8px}
+.tile{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%;padding:18px 10px;margin-bottom:12px;border-radius:18px;border:1.5px solid var(--line);background:var(--bg);color:var(--text);font:inherit;cursor:pointer}
+.tile b{font-size:19px}.tile small{color:var(--muted)}
+.dh{display:flex;align-items:center;gap:10px;margin-bottom:12px}.dh h2{margin:0;font-size:20px;flex:1}
+.ib{height:40px;padding:0 14px;border-radius:12px;border:1.5px solid var(--line);background:transparent;color:var(--text);font:inherit;cursor:pointer}
+.tot{border-radius:16px;padding:14px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:var(--bt);margin-bottom:14px}
+.tot b{display:block;font-size:28px;direction:ltr;text-align:right}
+.box{border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:14px}.box h3{margin:0 0 10px;font-size:16px}
+.tb{width:100%;border-collapse:collapse;font-size:14px}
+.tb th{background:var(--brand);color:var(--bt);padding:8px 5px;font-size:13px}
+.tb td{padding:9px 5px;border-bottom:1px solid var(--line);vertical-align:top}
+.trow{cursor:pointer}.c1{width:32px;text-align:center;color:var(--muted)}.c3{color:var(--muted);font-size:13px;line-height:1.6}
+.c4{white-space:nowrap;text-align:left;font-weight:800;direction:ltr}.neg{color:var(--danger)}.z{color:var(--ok)}
+.due{display:block;font-size:12px;color:var(--muted)}.due.late{color:var(--danger);font-weight:700}
+.tx{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--muted);padding:6px 0;border-bottom:1px dashed var(--line)}
+.tx b{direction:ltr}.tx .p{color:var(--ok)}.tx .d{color:var(--danger)}
+.acts{display:flex;gap:8px;margin-top:10px}.acts .in{margin:0;flex:1;min-width:0;direction:ltr;text-align:right}.acts .btn{width:auto;height:46px;padding:0 14px}
+.full{margin-top:8px;height:42px}.empty{text-align:center;color:var(--muted);padding:16px}
+#toast{position:fixed;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;font-weight:700;color:var(--ok);display:none}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<section id="vLogin">
+  <h1>دفتر الديون</h1><p class="sub">تسجيل الدخول</p>
+  <div class="card">
+    <label for="em">البريد الإلكتروني</label>
+    <input class="in ltr" id="em" type="email" autocomplete="email" placeholder="name@gmail.com">
+    <label for="pw">كلمة المرور</label>
+    <input class="in ltr" id="pw" type="password" autocomplete="current-password" placeholder="••••••••">
+    <div class="msg" id="lm"></div>
+    <button class="btn" id="go" type="button">دخول</button>
+    <button class="btn g full" id="forgot" type="button">نسيت كلمة المرور؟</button>
+  </div>
+</section>
+
+<section id="vHome" hidden>
+  <div class="dh"><h2>الرئيسية</h2><button class="ib" id="out" type="button">خروج</button></div>
+  <p class="sub" id="who"></p>
+  <button class="tile" data-book="debts" type="button"><b>الديون</b><small>تسجيل ومتابعة ديون المحل</small></button>
+  <button class="tile" data-book="sports" type="button"><b>ديون اشتراكات القنوات الرياضية</b><small>ديون مشتركي القنوات الرياضية</small></button>
+  <p class="sub" id="st"></p>
+</section>
+
+<section id="vList" hidden>
+  <div class="dh"><button class="ib" id="back" type="button">رجوع</button><h2 id="title"></h2></div>
+  <div class="tot"><small>إجمالي الديون</small><b id="tot">0</b><small id="late"></small></div>
+  <div class="box">
+    <h3>إضافة دين جديد</h3>
+    <input class="in" id="n" list="names" placeholder="اسم الزبون" autocomplete="off">
+    <input class="in" id="a" inputmode="decimal" placeholder="المبلغ" style="direction:ltr;text-align:right" autocomplete="off">
+    <input class="in" id="it" placeholder="الحاجة المباعة (مثال: سكر)" autocomplete="off">
+    <div id="dueW" hidden><label for="due">تاريخ استحقاق الاشتراك</label><input class="in ltr" id="due" type="date"></div>
+    <div class="msg" id="hint" style="color:var(--brand);font-weight:700"></div>
+    <button class="btn" id="add" type="button">إضافة الدين</button>
+    <datalist id="names"></datalist>
+  </div>
+  <input class="in" id="q" placeholder="بحث عن زبون" autocomplete="off">
+  <div id="list"></div>
+</section>
+
+</main>
+<div id="toast"></div>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut,sendPasswordResetEmail} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {initializeFirestore,persistentLocalCache,collection,onSnapshot,addDoc,updateDoc,deleteDoc,doc,arrayUnion} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* 1) الصق إعدادات مشروعك هنا (من Firebase Console > Project settings > Your apps) */
+const firebaseConfig={apiKey:"AIzaSyBE0Y10IBFOks36JvCzsuPCXuBmMRjY-Wg",authDomain:"ahmed---shop.firebaseapp.com",projectId:"ahmed---shop",storageBucket:"ahmed---shop.firebasestorage.app",messagingSenderId:"256983045673",appId:"1:256983045673:web:2d057b51b2e6b5d62c6e38"};
+/* 2) بريدك كمالك (يحذف الزبائن). يجب أن يطابق القائمة في firestore.rules */
+const OWNERS=["watenahmedsubhe@gmail.com"];
+
+const app=initializeApp(firebaseConfig),auth=getAuth(app);
+const db=initializeFirestore(app,{localCache:persistentLocalCache()});
+const col=collection(db,"shops","main","customers");
+const TITLES={debts:"الديون",sports:"ديون اشتراكات القنوات الرياضية"};
+let book="debts",data=[],openId=null,user=null,isOwner=false,unsub=null;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const num=s=>{s=String(s).replace(/[٠-٩]/g,c=>c.charCodeAt(0)-1632).replace(/[۰-۹]/g,c=>c.charCodeAt(0)-1776).replace(/٫/g,".").replace(/[,٬\s]/g,"");const n=parseFloat(s);return isFinite(n)?n:NaN};
+const fmt=n=>n.toLocaleString("en-US",{maximumFractionDigits:2});
+const bal=c=>(c.tx||[]).reduce((a,t)=>a+(t.k==="d"?t.a:-t.a),0);
+const nm=s=>String(s).replace(/\s+/g," ").trim().toLowerCase();
+const iso=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const show=v=>["vLogin","vHome","vList"].forEach(x=>$(x).hidden=x!==v);
+let tt;const toast=(m,bad)=>{const t=$("toast");t.textContent=m;t.style.color=bad?"var(--danger)":"var(--ok)";t.style.display="block";clearTimeout(tt);tt=setTimeout(()=>t.style.display="none",3000)};
+const w=p=>p.catch(e=>toast("تعذّر الحفظ: "+(e.code||""),1));
+const disarm=(el,o)=>{delete el.dataset.armed;delete el.dataset.amt;el.textContent=o;el.classList.remove("armed")};
+const arm=(el,t,o)=>{el.dataset.armed="1";el.textContent=t;el.classList.add("armed");setTimeout(()=>{if(el.isConnected&&el.dataset.armed)disarm(el,o)},6000)};
+
+/* ---- الدخول ---- */
+const errs={"auth/invalid-credential":"البريد أو كلمة المرور غير صحيحة","auth/invalid-email":"البريد غير صحيح","auth/too-many-requests":"محاولات كثيرة، حاول لاحقاً","auth/network-request-failed":"لا يوجد اتصال بالإنترنت"};
+$("go").onclick=()=>{
+  $("lm").style.color="";$("lm").textContent="";
+  signInWithEmailAndPassword(auth,$("em").value.trim(),$("pw").value).catch(e=>$("lm").textContent=errs[e.code]||"تعذّر الدخول ("+e.code+")");
+};
+$("pw").onkeydown=e=>{if(e.key==="Enter")$("go").click()};
+$("forgot").onclick=()=>{
+  const m=$("em").value.trim();if(!m){$("lm").textContent="اكتب بريدك أولاً";return}
+  sendPasswordResetEmail(auth,m).then(()=>{$("lm").style.color="var(--ok)";$("lm").textContent="أُرسل رابط تغيير كلمة المرور إلى بريدك"},()=>$("lm").textContent="تعذّر الإرسال");
+};
+$("out").onclick=()=>signOut(auth);
+onAuthStateChanged(auth,u=>{
+  user=u;if(unsub){unsub();unsub=null}
+  if(!u){data=[];show("vLogin");return}
+  isOwner=OWNERS.map(x=>x.toLowerCase()).includes((u.email||"").toLowerCase());
+  $("who").textContent=u.email+(isOwner?" (مالك)":"");
+  show("vHome");
+  unsub=onSnapshot(col,s=>{data=s.docs.map(d=>({id:d.id,...d.data()}));$("st").textContent=s.metadata.fromCache?"وضع عدم الاتصال: سيتزامن عند عودة الإنترنت":"متزامن";render()},e=>{$("st").textContent="تعذّر الاتصال: "+e.code});
+});
+
+/* ---- التنقل ---- */
+document.querySelectorAll(".tile").forEach(t=>t.onclick=()=>{book=t.dataset.book;openId=null;$("title").textContent=TITLES[book];$("dueW").hidden=book!=="sports";$("q").value="";show("vList");render()});
+$("back").onclick=()=>show("vHome");
+
+/* ---- العرض ---- */
+const dueInfo=(c,b)=>{
+  if(book!=="sports"||!c.due)return"";
+  const d=Math.round((new Date(c.due+"T00:00:00")-new Date(new Date().toDateString()))/864e5),late=d<0&&b>0;
+  const t=d<0?(b>0?"متأخر "+(-d)+" يوم":"انتهى "+c.due):d===0?"يستحق اليوم":d<=3?"يستحق بعد "+d+" أيام":"يستحق: "+c.due;
+  return `<small class="due${late?" late":""}">${t}</small>`;
+};
+function render(){
+  if($("vList").hidden)return;
+  const all=data.filter(c=>c.book===book).sort((a,b)=>(a.created||0)-(b.created||0));
+  const today=iso(new Date());let total=0,late=0;
+  all.forEach(c=>{const b=bal(c);total+=b;if(book==="sports"&&c.due&&b>0&&c.due<today)late++});
+  $("tot").textContent=fmt(total);
+  $("late").textContent=late?`تنبيه: ${late} زبون متأخر عن موعد الاشتراك`:"";
+  $("names").innerHTML=all.map(c=>`<option value="${esc(c.name)}">`).join("");
+  const q=nm($("q").value),rows=all.map((c,i)=>({c,i})).filter(r=>!q||nm(r.c.name).includes(q));
+  if(!rows.length){$("list").innerHTML=`<div class="empty">${all.length?"لا توجد نتائج":"لم تُسجَّل أي ديون بعد."}</div>`;return}
+  $("list").innerHTML=`<div style="overflow-x:auto"><table class="tb"><thead><tr><th>#</th><th>الزبون</th><th>الحاجات المباعة</th><th>المبلغ الكلي</th></tr></thead><tbody>`+rows.map(({c,i})=>{
+    const b=bal(c),items=esc((c.tx||[]).filter(t=>t.k==="d"&&t.n).map(t=>t.n).join("، "));
+    let h=`<tr class="trow" data-id="${c.id}"><td class="c1">${i+1}</td><td>${esc(c.name)}${dueInfo(c,b)}</td><td class="c3">${items}</td><td class="c4 ${b>0?"neg":"z"}">${fmt(b)}</td></tr>`;
+    if(c.id===openId){
+      h+=`<tr><td colspan="4">`+(c.tx||[]).slice(-8).reverse().map(t=>`<div class="tx"><span>${new Date(t.t).toLocaleDateString("en-GB")}${t.n?" - "+esc(t.n):""}${t.by?" · "+esc(t.by):""}</span><b class="${t.k}">${t.k==="d"?"+":"-"}${fmt(t.a)}</b></div>`).join("")
+        +(book==="sports"?`<button class="btn g full" data-ren="${c.id}" type="button">تجديد الاشتراك شهراً</button>`:"")
+        +`<div class="acts"><input class="in" id="pa" inputmode="decimal" placeholder="المبلغ" autocomplete="off"><button class="btn pay" data-pay="${c.id}" type="button">تسديد</button><button class="btn g" data-more="${c.id}" type="button">دين</button></div>`
+        +(isOwner?`<button class="btn g full" style="color:var(--danger)" data-del="${c.id}" type="button">حذف الزبون</button>`:"")
+        +`</td></tr>`;
+    }
+    return h;
+  }).join("")+`</tbody></table></div>`;
+}
+$("q").oninput=render;
+$("n").oninput=()=>{
+  const n=nm($("n").value),f=n&&data.find(c=>c.book===book&&nm(c.name)===n);
+  $("hint").textContent=f?`زبون موجود - رصيده الحالي: ${fmt(bal(f))}. اكتب المبلغ المضاف فقط وسيُجمع عليه.`:(n?"زبون جديد":"");
+};
+
+/* ---- إضافة دين ---- */
+$("add").onclick=()=>{
+  const name=$("n").value.replace(/\s+/g," ").trim(),a=num($("a").value),item=$("it").value.trim(),due=$("due").value;
+  if(!name)return toast("أدخل اسم الزبون",1);
+  if(!(a>0))return toast("أدخل مبلغاً صحيحاً",1);
+  const e={k:"d",a,n:item,t:Date.now(),by:user.email},ex=data.find(c=>c.book===book&&nm(c.name)===nm(name));
+  const p=ex?updateDoc(doc(col,ex.id),{tx:arrayUnion(e),...(due?{due}:{})}):addDoc(col,{book,name,tx:[e],due:due||"",created:Date.now()});
+  w(p);
+  toast("تمت الإضافة. الرصيد الآن: "+fmt((ex?bal(ex):0)+a));
+  $("n").value=$("a").value=$("it").value=$("due").value="";$("hint").textContent="";
+};
+
+/* ---- إجراءات الزبون ---- */
+$("list").oninput=e=>{if(e.target.id==="pa"){const b=$("list").querySelector("[data-pay]");if(b&&b.dataset.armed)disarm(b,"تسديد")}};
+$("list").onclick=e=>{
+  const el=e.target.closest("[data-id],[data-pay],[data-more],[data-ren],[data-del]");if(!el)return;
+  if(el.dataset.id){openId=openId===el.dataset.id?null:el.dataset.id;render();return}
+  const id=el.dataset.pay||el.dataset.more||el.dataset.ren||el.dataset.del,c=data.find(x=>x.id===id);if(!c)return;
+  const ref=doc(col,id);
+  if(el.dataset.del){
+    if(!el.dataset.armed){const b=bal(c);arm(el,`تأكيد حذف «${c.name}» وكل سجله${b>0?" (عليه "+fmt(b)+")":""}؟`,"حذف الزبون");return}
+    openId=null;w(deleteDoc(ref));toast("تم حذف الزبون");return;
+  }
+  if(el.dataset.ren){
+    const cur=c.due&&c.due>iso(new Date())?new Date(c.due+"T00:00:00"):new Date();cur.setMonth(cur.getMonth()+1);
+    w(updateDoc(ref,{due:iso(cur)}));return;
+  }
+  const a=num($("pa").value);
+  if(!(a>0)){$("pa").style.borderColor="var(--danger)";return}
+  const isPay=!!el.dataset.pay;
+  if(isPay&&!(el.dataset.armed&&el.dataset.amt===String(a))){
+    arm(el,(a>bal(c)?"المبلغ أكبر من الدين! ":"")+"تأكيد تسديد "+fmt(a)+"؟","تسديد");el.dataset.amt=String(a);return;
+  }
+  w(updateDoc(ref,{tx:arrayUnion({k:isPay?"p":"d",a,n:"",t:Date.now(),by:user.email})}));
+};
+</script>
+</body>
+</html>
