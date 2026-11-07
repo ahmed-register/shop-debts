@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>دفتر الديون</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f766e">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <style>
 :root{--bg:#f3f6f4;--card:#fff;--text:#14201b;--muted:#5d6d66;--line:#d9e2dd;--brand:#0f766e;--brand2:#14b8a6;--bt:#fff;--danger:#c0392b;--ok:#15803d;--glow:rgba(20,184,166,.25);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-color-scheme:dark){:root{--bg:#0c1512;--card:#14201c;--text:#e8f1ed;--muted:#93a69d;--line:#26362f;--brand:#14b8a6;--brand2:#2dd4bf;--bt:#06201c;--danger:#ff7b6b;--ok:#4ade80;--glow:rgba(45,212,191,.2)}}
@@ -94,6 +98,7 @@ const firebaseConfig={apiKey:"AIzaSyBE0Y10IBFOks36JvCzsuPCXuBmMRjY-Wg",authDomai
 /* 2) بريدك كمالك (يحذف الزبائن). يجب أن يطابق القائمة في firestore.rules */
 const OWNERS=["watenahmedsubhe@gmail.com"];
 
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 const app=initializeApp(firebaseConfig),auth=getAuth(app);
 const db=initializeFirestore(app,{localCache:persistentLocalCache()});
 const col=collection(db,"shops","main","customers");
